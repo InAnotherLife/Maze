@@ -35,4 +35,5 @@ class Maze {
 };
 
 }  // namespace my
+
 #endif  // SRC_MODEL_MAZE_H_

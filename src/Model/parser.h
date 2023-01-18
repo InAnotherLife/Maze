@@ -1,5 +1,5 @@
-#ifndef SRC_MODEL_PARSE_FILE_H_
-#define SRC_MODEL_PARSE_FILE_H_
+#ifndef SRC_MODEL_PARSER_H_
+#define SRC_MODEL_PARSER_H_
 
 #include <cstring>
 #include <fstream>
@@ -7,9 +7,9 @@
 
 namespace my {
 
-class ParseFile {
+class Parser {
  public:
-  ParseFile() : rows_(0), columns_(0), map_(0){};
+  Parser() : rows_(0), columns_(0), map_(0){};
   void ReadData(const std::string &file_path);
   std::vector<size_t> GetMazeVertical();
   std::vector<size_t> GetMazeHorizontal();
@@ -25,4 +25,4 @@ class ParseFile {
 
 }  // namespace my
 
-#endif  // SRC_MODEL_PARSE_FILE_H_
+#endif  // SRC_MODEL_PARSER_H_

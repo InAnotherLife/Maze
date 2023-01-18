@@ -3,7 +3,7 @@
 namespace my {
 
 void Controller::OpenFile(const std::string &file_path) {
-  parser_ = std::make_unique<ParseFile>();
+  parser_ = std::make_unique<Parser>();
   parser_->ReadData(file_path);
 }
 

@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "../Model/maze.h"
-#include "../Model/parse_file.h"
+#include "../Model/parser.h"
 
 namespace my {
 
@@ -19,7 +19,7 @@ class Controller {
   void CheckMaze();
 
  private:
-  std::unique_ptr<ParseFile> parser_;
+  std::unique_ptr<Parser> parser_;
   std::unique_ptr<Maze> maze_map_;
 };
 

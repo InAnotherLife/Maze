@@ -1,23 +1,23 @@
-#include "parse_file.h"
+#include "parser.h"
 
 namespace my {
 
-std::vector<size_t> ParseFile::GetMazeVertical() {
+std::vector<size_t> Parser::GetMazeVertical() {
   std::vector<size_t> tmp_map(map_.begin(), map_.begin() + (map_.size() / 2));
   return tmp_map;
 }
 
-std::vector<size_t> ParseFile::GetMazeHorizontal() {
+std::vector<size_t> Parser::GetMazeHorizontal() {
   std::vector<size_t> tmp_map(map_.begin() + (map_.size() / 2),
                               map_.begin() + map_.size());
   return tmp_map;
 }
 
-size_t ParseFile::GetRows() { return rows_; }
+size_t Parser::GetRows() { return rows_; }
 
-size_t ParseFile::GetColumns() { return columns_; }
+size_t Parser::GetColumns() { return columns_; }
 
-void ParseFile::ReadData(const std::string &file_path) {
+void Parser::ReadData(const std::string &file_path) {
   map_.clear();
   std::ifstream file;
   file.open(file_path);
@@ -43,7 +43,7 @@ void ParseFile::ReadData(const std::string &file_path) {
   file.close();
 }
 
-void ParseFile::CheckMaze() {
+void Parser::CheckMaze() {
   if (map_.size() != rows_ * columns_ * 2)
     throw std::out_of_range("The file is damaged or this is not maze");
 }
