@@ -33,9 +33,7 @@ std::vector<std::pair<size_t, size_t>> Controller::GetPath(
   find_path_ = std::make_unique<FindPath>();
   find_path_->SetStartPoint(start);
   find_path_->SetFinishPoint(finish);
-  auto result =
-      find_path_->GetPath(rows, columns, maze_map.first, maze_map.second);
-  return result;
+  return find_path_->GetPath(rows, columns, maze_map.first, maze_map.second);
 }
 
 }  // namespace my
