@@ -1,8 +1,8 @@
 CC=g++
 PROJECT=maze
-SOURCES=./Model/maze.cc ./Model/parser.cc
-HEADERS=./Model/maze.h ./Model/parser.h
-OBJECTS=maze.o parser.o
+SOURCES=./Model/maze.cc ./Model/parser.cc ./Model/path.cc ./Model/matrix.cc
+HEADERS=./Model/maze.h ./Model/parser.h ./Model/path.h ./Model/matrix.cc
+OBJECTS=maze.o parser.o path.o matrix.o
 OUTTESTSNAME=tests
 REPORTNAME=Report
 BUILDNAME=Build

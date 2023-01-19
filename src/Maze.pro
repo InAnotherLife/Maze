@@ -13,12 +13,16 @@ SOURCES += \
     View/main.cc \
     View/mainwindow.cc \
     Model/parser.cc \
+    Model/path.cc \
+    Model/matrix.cc \
     Controller/controller.cc
 
 HEADERS += \
     Model/maze.h \
     View/mainwindow.h \
     Model/parser.h \
+    Model/path.h \
+    Model/matrix.h \
     Controller/controller.h
 
 FORMS += \

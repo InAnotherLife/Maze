@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
   pen_.setWidth(2);
   home_path_ = QDir::homePath();
   ui_->maze_safe_pushButton->setEnabled(false);
+  ui_->maze_rows_spinBox->setValue(10);
+  ui_->maze_columns_spinBox->setValue(10);
 }
 
 MainWindow::~MainWindow() {}
@@ -31,6 +33,7 @@ void MainWindow::on_maze_open_pushButton_clicked() {
     scene_->clear();
     home_path_ = QFileInfo(file_path).absolutePath();
     try {
+      coords_flag_ = 2;
       controller_->OpenFile(file_path.toStdString());
       maze_map_ = controller_->GetMaze();
       controller_->CheckMaze();
@@ -43,6 +46,7 @@ void MainWindow::on_maze_open_pushButton_clicked() {
       DrawBorder();
       DrawMaze();
     } catch (const std::out_of_range &error) {
+      coords_flag_ = 1;
       QMessageBox::about(this, "Warning", error.what());
     }
   }
@@ -91,6 +95,7 @@ void MainWindow::on_maze_generate_pushButton_clicked() {
   rows_ = ui_->maze_rows_spinBox->value();
   columns_ = ui_->maze_columns_spinBox->value();
   scene_->clear();
+  coords_flag_ = 2;
   ui_->maze_safe_pushButton->setEnabled(true);
   maze_map_ = controller_->GenerateMaze(rows_, columns_);
   GetStep();
@@ -134,6 +139,68 @@ void MainWindow::on_maze_safe_pushButton_clicked() {
       file.close();
     }
   }
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+  if (ui_->maze_widget->underMouse() && coords_flag_ > 1) {
+    if (event->button() == Qt::LeftButton) {
+      if (coords_flag_ == 2) {
+        SceneClear();
+        begin_point_ = GetCoords(Qt::green);
+        coords_flag_ = 3;
+      } else if (coords_flag_ == 3) {
+        end_point_ = GetCoords(Qt::red);
+        if (begin_point_.second == end_point_.second &&
+            begin_point_.first == end_point_.first) {
+          SceneClear();
+          coords_flag_ = 2;
+          QMessageBox::about(this, "Warning", "The coordinates match!");
+        } else {
+          coords_flag_ = 2;
+          FindPath();
+        }
+      }
+    } else if (event->button() == Qt::RightButton) {
+      SceneClear();
+      coords_flag_ = 2;
+    }
+  }
+}
+
+void MainWindow::FindPath() {
+  try {
+    auto path_coords = controller_->GetPath(begin_point_, end_point_, rows_,
+                                            columns_, maze_map_);
+    QPen pen;
+    pen.setColor(Qt::red);
+    pen.setWidth(2);
+    for (size_t i = 0; i < (path_coords.size() - 1); ++i) {
+      scene_->addLine(QLine(path_coords[i].second * step_x_ + step_x_ / 2,
+                            path_coords[i].first * step_y_ + step_y_ / 2,
+                            path_coords[i + 1].second * step_x_ + step_x_ / 2,
+                            path_coords[i + 1].first * step_y_ + step_y_ / 2),
+                      pen);
+    }
+    DrawRect(path_coords[0].second, path_coords[0].first, Qt::green);
+  } catch (const std::out_of_range &error) {
+    SceneClear();
+    coords_flag_ = 2;
+    QMessageBox::about(this, "Warning", error.what());
+  }
+}
+
+std::pair<size_t, size_t> MainWindow::GetCoords(QColor color) {
+  size_t mult_x = 0, mult_y = 0;
+  QPointF point_coord = ui_->maze_widget->mapFromGlobal(QCursor::pos());
+  mult_x = trunc(point_coord.x() / step_x_);
+  mult_y = trunc(point_coord.y() / step_y_);
+  DrawRect(mult_x, mult_y, color);
+  return std::make_pair(mult_y, mult_x);
+}
+
+void MainWindow::DrawRect(size_t x, size_t y, QColor color) {
+  scene_->addRect(x * step_x_ + 1, y * step_y_ + 1, step_x_ - 3, step_y_ - 3,
+                  QPen(color), QBrush(color));
 }
 
 void MainWindow::SceneClear() {

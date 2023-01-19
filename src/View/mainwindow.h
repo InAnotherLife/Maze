@@ -9,6 +9,7 @@
 #include <QLine>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QMouseEvent>
 #include <QPen>
 #include <QTextStream>
 #include <memory>
@@ -31,6 +32,9 @@ class MainWindow : public QMainWindow {
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 
+ protected slots:
+  void mousePressEvent(QMouseEvent *event) override;
+
  private:
   std::unique_ptr<Ui::MainWindow> ui_;
   std::unique_ptr<QGraphicsScene> scene_;
@@ -41,6 +45,9 @@ class MainWindow : public QMainWindow {
   std::pair<std::vector<size_t>, std::vector<size_t>> maze_map_;
   size_t rows_;
   size_t columns_;
+  std::pair<size_t, size_t> begin_point_;
+  std::pair<size_t, size_t> end_point_;
+  unsigned short int coords_flag_;
   QPen pen_;
   QColor color_;
   void GetStep();
@@ -48,6 +55,9 @@ class MainWindow : public QMainWindow {
   void DrawMaze();
   void ClearVars();
   void SceneClear();
+  void FindPath();
+  std::pair<size_t, size_t> GetCoords(QColor color);
+  void DrawRect(size_t x, size_t y, QColor color);
 
  private slots:
   void on_maze_open_pushButton_clicked();
